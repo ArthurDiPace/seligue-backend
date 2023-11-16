@@ -1,0 +1,69 @@
+{% load static permissionario %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{{ title }}</title>
+        <link rel="stylesheet" href="{% static 'css/print.css' %}">
+    </head>
+    <body>
+      <header>
+        <div class="header-left">
+          <img src="{% static 'images/logo-semob.png' %}">
+        </div>
+        <div class="header-left-ml-20">
+          <link rel="stylesheet" type="text/css" href="{% static 'css/paisagem.css' %}">
+          <span class="title">Prefeitura Municipal de João Pessoa</span><br>
+          <span class="subtitle">Superintendência Executiva de Mobilidade Urbana</span><br>
+          <span class="subtitle">Divisão de Transportes</span>
+        </div>
+      </header>
+      {%if categoria == 'taxi'%}
+      <h2 style="text-align: center;">Relatório de Permissionarios dos Táxis</h2>
+      {%endif%}
+      {%if categoria == 'escolar'%}
+      <h2 style="text-align: center;">Relatório de Permissionarios dos Transportes Escolares</h2>
+      {%endif%}
+      {%if categoria == 'turismo'%}
+      <h2 style="text-align: center;">Relatório de Permissionarios dos Veículos do Turismo</h2>
+      {%endif%}
+      {%if categoria == 'fretamento'%}
+      <h2 style="text-align: center;">Relatório de Permissionarios dos Veículos de Fretamento</h2>
+      {%endif%}
+      <br><br>
+      <main>
+
+        <table>
+          <tr>
+            <td>Nome</td>
+            <td>CPF</td>
+            <td>Ponto</td>
+            <td>Endereço</td>
+            <td>Bairro</td>
+            <td>Função</td>
+            <td>Telefone</td>
+            <td>Data de Cadastro</td>
+          </tr>
+          {% for item in permissoes %}
+          <tr>
+            <td>{{item.nome }}</td>
+            <td>{{item.numero_documento}}</td>
+            <td>{{item.ponto.numero}}</td>
+            <td>{{item.endereco}}</td>
+            <td>{{item.bairro}}</td>
+            <td>{{item.funcao}}</td>
+            <td>{{item.telefone}}</td>
+            <td>{{item.permissao.data_cadastro}}</td>
+            
+          </tr>
+        {% endfor %}
+        </table>
+        
+      </main>
+      <footer>
+        SEMOB - BR 230 - Km, 25, Cristo - João Pessoa
+        Fones: 0800.281.1518 / 32189350
+      </footer>
+    </body>
+</html>

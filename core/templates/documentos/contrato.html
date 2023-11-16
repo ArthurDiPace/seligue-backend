@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{{ title }}</title>
+        <link rel="stylesheet" href="{% static 'css/print.css' %}">
+    </head>
+    <body>
+      <header>
+        <div class="header-left">
+          <img src="{% static 'images/logo-semob.png' %}">
+        </div>
+        <div class="header-left-ml-20">
+          <span class="title">SE LIGUE GERADORES</span><br>
+          <span class="subtitle">Superintendência Executiva de Mobilidade Urbana</span><br>
+          <span class="subtitle">Divisão de Transportes Especiais</span>
+        </div>
+      </header>
+
+      <main>
+        <p>
+          **CONTRATO DE PRESTAÇÃO DE SERVIÇOS**
+      
+          **PARTES CONTRATANTES**
+      
+          **CONTRATANTE:**
+          Nome: {{ contrato.cliente.nome }}
+          CPF: {{ contrato.cliente.numero_documento }}
+          Endereço: {{ contrato.cliente.endereco }}
+      
+          **CONTRATADA:**
+          Nome da Empresa: [Inserir nome da empresa prestadora de serviços]
+          CNPJ da Empresa: [Inserir CNPJ da empresa]
+          Endereço da Empresa: [Inserir endereço da empresa]
+      
+          **OBJETO DO CONTRATO**
+      
+          O presente contrato tem como objeto a prestação de serviços de aluguel de geradores pela CONTRATADA para o CONTRATANTE.
+      
+          **DESCRIÇÃO DOS SERVIÇOS**
+      
+          A CONTRATADA compromete-se a disponibilizar os serviços de aluguel de geradores, de acordo com os termos e condições específicos de cada contrato.
+      
+          **NÚMERO DO CONTRATO**
+      
+          O serviço a ser prestado está relacionado ao contrato de Nº {{ contrato.numero }}.
+      
+          **PRAZO E FORMA DE PAGAMENTO**
+      
+          O prazo de prestação dos serviços será estabelecido em cada contrato específico e acordado entre as partes. O pagamento pelos serviços será feito de acordo com as condições previamente acordadas.
+      
+          **DISPOSIÇÕES FINAIS**
+      
+          1. Qualquer alteração ou adendo a este contrato deve ser formalizada por escrito e assinada por ambas as partes.
+      
+          2. Este contrato é regido pelas leis do Brasil, e quaisquer disputas serão submetidas à jurisdição competente.
+      
+          3. As partes declaram ter lido e entendido este contrato e concordam com todos os seus termos e condições.
+      
+          **LOCAL E DATA**
+      
+          Local: [Inserir local de assinatura]
+          Data: [Inserir data de assinatura]
+      
+          **CONTRATANTE**
+      
+          [Assinatura do Contratante]
+          Nome: {{ contrato.cliente.nome }}
+      
+          **CONTRATADA**
+      
+          [Assinatura do Representante Legal da Contratada]
+          Nome: [Inserir nome do representante]
+          Cargo: [Inserir cargo do representante]
+      </p>
+      
+      
+
+      </main>
+
+      <br><br>
+      <div class="flex-item text-center">
+        <img src="data:image/svg;base64,{{qrcode}}" style="width: 100px;" />
+      </div>
+      
+      <footer>
+        SEMOB - BR 230 - Km, 25, Cristo - João Pessoa
+        Fones: 0800.281.1518 / 32189350
+      </footer>
+    </body>
+</html>
