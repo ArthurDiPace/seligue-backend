@@ -31,12 +31,26 @@ logger = logging.getLogger(__name__)
 
 
 class ClienteViewSet(LoggingMixin, viewsets.ModelViewSet):
-    queryset = Cliente.objects.filter(excluido=False)
     serializer_class = ClienteSerializer
     permission_classes = [DjangoModelPermissions]
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["nome"]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = {'nome': ['icontains'], 'numero_documento': ['icontains']}
+    search_fields = ['nome__icontains', 'numero_documento__icontains']
 
+    def get_queryset(self):
+        queryset = Cliente.objects.filter(excluido=False)  
+        nome = self.request.query_params.get('nome')
+        numero_documento = self.request.query_params.get('numero_documento')
+        
+
+        if nome is not None:
+            queryset = queryset.filter(excluido=False, nome__icontains=nome)
+        
+        if numero_documento is not None :
+            queryset = queryset.filter(excluido=False, numero_documento__icontains=numero_documento)
+            
+        queryset = queryset.order_by('nome', 'numero_documento')
+        return queryset
 
 class EquipamentoViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = Equipamento.objects.filter(excluido=False)
@@ -44,6 +58,7 @@ class EquipamentoViewSet(LoggingMixin, viewsets.ModelViewSet):
     permission_classes = [DjangoModelPermissions]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["id", "categoria"]
+    
     
     
     def create(self, request, *args, **kwargs):

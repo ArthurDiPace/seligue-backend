@@ -28,7 +28,6 @@ class VeiculoSerializer(serializers.ModelSerializer):
 
 
 class ItemServicoSerializer(serializers.ModelSerializer):
-    descricao = serializers.CharField(read_only=True)
     
     class Meta:
         model = ItemServico

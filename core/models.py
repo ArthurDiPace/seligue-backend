@@ -12,7 +12,7 @@ from common import enums
 class Cliente(models.Model):
     observacao = models.TextField(max_length=500, null=True, blank=True)
     tipo = models.CharField(max_length=10, choices=enums.ClienteTipo.choices())
-    numero_documento = models.CharField(max_length=14)
+    numero_documento = models.CharField(max_length=18)
     nome = models.CharField(max_length=80)
     data_nascimento = models.DateField(null=True, blank=True)
     cep = models.CharField(max_length=8)
@@ -23,6 +23,7 @@ class Cliente(models.Model):
     municipio = models.CharField(max_length=80)
     uf = models.CharField(max_length=2)
     telefone = models.CharField(max_length=20)
+    email = models.EmailField(max_length=100, null=True, blank=True)
     excluido = models.BooleanField(default=False)
     data_cadastro = models.DateField(auto_now_add=True)
     foto = models.ImageField(upload_to="pessoas_fotos", null=True, blank=True)
