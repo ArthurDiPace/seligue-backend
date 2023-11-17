@@ -61,30 +61,7 @@ class EquipamentoViewSet(LoggingMixin, viewsets.ModelViewSet):
     
     
     
-    def create(self, request, *args, **kwargs):
-        tipo = request.data.get('categoria', None)
-        id = request.data.get('id', None)
-        
-        if tipo == 'veiculo':
-            model_class = Veiculo
-        elif tipo == 'equipamento':
-            model_class = Equipamento
-        else:
-            return Response({"error": "Tipo inválido"}, status=status.HTTP_400_BAD_REQUEST)
-
-        try:
-            obj = model_class.objects.get(id=id)
-        except model_class.DoesNotExist:
-            return Response({"error": f"{model_class.__name__} com ID {id} não encontrado"},
-                            status=status.HTTP_404_NOT_FOUND)
-
-
-        servico = Servico.objects.create(
-            content_type=ContentType.objects.get_for_model(obj),
-            object_id=obj.id,
-        )
-
-        return Response({"success": "Serviço criado com sucesso"}, status=status.HTTP_201_CREATED)
+    
 
 class VeiculoViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = Veiculo.objects.filter(excluido=False)
@@ -122,6 +99,31 @@ class ServicoViewSet(LoggingMixin, viewsets.ModelViewSet):
         "parecer",
     ]
     ordering = ["veiculo__categoria", "equipamento__categoria", "parecer"]
+
+    def create(self, request, *args, **kwargs):
+        tipo = request.data.get('categoria', None)
+        id = request.data.get('id', None)
+        
+        if tipo == 'veiculo':
+            model_class = Veiculo
+        elif tipo == 'equipamento':
+            model_class = Equipamento
+        else:
+            return Response({"error": "Tipo inválido"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            obj = model_class.objects.get(id=id)
+        except model_class.DoesNotExist:
+            return Response({"error": f"{model_class.__name__} com ID {id} não encontrado"},
+                            status=status.HTTP_404_NOT_FOUND)
+
+
+        servico = Servico.objects.create(
+            content_type=ContentType.objects.get_for_model(obj),
+            object_id=obj.id,
+        )
+
+        return Response({"success": "Serviço criado com sucesso"}, status=status.HTTP_201_CREATED)
     
 class UserViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = User.objects.all()
