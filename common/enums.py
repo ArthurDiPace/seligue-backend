@@ -36,3 +36,16 @@ class ServicoStatus(BaseEnum):
     APROVADO_COM_RESSALVA: str = "aprovado_com_ressalva"
     PENDENTE: str = "pendente"
     REPROVADO: str = "reprovado"
+
+@unique
+class TipoPagamento(BaseEnum):
+    PIX: str = "pix"
+    DINHEIRO: str = "dinheiro"
+    DEPOSITO: str = "deposito"
+    CARTAO_CREDITO: str = "cartao_credito"
+    CARTAO_DEBITO: str = "cartao_debito"
+
+@unique
+class TipoStatus(BaseEnum):
+    FUNCIONANDO: str = "funcionando"
+    STANDBY: str = "standby"

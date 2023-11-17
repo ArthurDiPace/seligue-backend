@@ -1,0 +1,132 @@
+@page {
+  size: A4;
+  margin: 1cm;
+}
+
+body {
+  font-family: Arial;
+  color: black;
+  line-height: 1.2;
+}
+
+h2,
+ul {
+  padding: 5px 0 0;
+  margin: 0;
+}
+
+ul {
+  margin-left: 20px;
+}
+
+.d-flex {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: stretch;
+  column-gap: 0.875rem;
+}
+
+.signature {
+  margin-top: 20%;
+  width: 40%;
+  border-top: 1px solid black;
+  padding-top: 10px;
+  text-align: center;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+p {
+  line-height: 15px;
+}
+
+header {
+  width: 100%;
+  display: table;
+  margin-bottom: 20px;
+}
+
+header .title {
+  font-size: 21px;
+  font-weight: bold;
+}
+
+header .subtitle {
+  font-size: 18px;
+}
+
+.header-left-ml-20 {
+  float: left;
+}
+
+.header-left {
+  width: 30%;
+}
+
+.header-left img {
+  width: 100%;
+}
+
+.header-center-ml-20 {
+  margin: 0.5% 0 0 4%;
+  line-height: 20px;
+  text-align: center;
+}
+
+main h2 {
+  text-align: center;
+}
+
+main p {
+  line-height: 1.5;
+  text-align: justify;
+}
+
+footer {
+  bottom: 0;
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  font-size: .835rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table td {
+  border: 1px solid black;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.locador {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.locatario {
+  width: 45%;
+  white-space: nowrap;
+}
+
+.locatario p {
+  margin-bottom: 5px;
+  padding-top: 100px;
+}

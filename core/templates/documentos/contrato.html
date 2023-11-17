@@ -9,73 +9,160 @@
     <body>
       <header>
         <div class="header-left">
-          <img src="{% static 'images/logo-semob.png' %}">
+          <img src="{% static 'images/logocontrato.png' %}">
         </div>
-        <div class="header-left-ml-20">
-          <span class="title">SE LIGUE GERADORES</span><br>
-          <span class="subtitle">Superintendência Executiva de Mobilidade Urbana</span><br>
-          <span class="subtitle">Divisão de Transportes Especiais</span>
+        <div class="header-center-ml-20">
+          <span class="title"><strong>Contrato de Locação de Gerador - Nº {{numero}}</strong></span><br>
         </div>
       </header>
 
-      <main>
-        <p>
-          **CONTRATO DE PRESTAÇÃO DE SERVIÇOS**
+      <main>     
+          <p><strong>Locador:</strong></p>
+          Nome: CELIO DI PACE NETO <br>
+          CPF: 487.063.294-20 <br>
+          Endereço: Rua Trancedo Neves, nº 220, Ipês, João Pessoa - PB <br>
       
-          **PARTES CONTRATANTES**
+          <p><strong>Locatário:</strong></p>
+          Nome: {{ cliente.nome }} <br>
+          CPF: {{ cliente.numero_documento }} <br>
+          Endereço: {{ cliente.endereco }}, nº {{ cliente.numero }}, {{ cliente.bairro }}, {{ cliente.municipio }} - {{ cliente.uf }}<br>
       
-          **CONTRATANTE:**
-          Nome: {{ contrato.cliente.nome }}
-          CPF: {{ contrato.cliente.numero_documento }}
-          Endereço: {{ contrato.cliente.endereco }}
-      
-          **CONTRATADA:**
-          Nome da Empresa: [Inserir nome da empresa prestadora de serviços]
-          CNPJ da Empresa: [Inserir CNPJ da empresa]
-          Endereço da Empresa: [Inserir endereço da empresa]
-      
-          **OBJETO DO CONTRATO**
-      
-          O presente contrato tem como objeto a prestação de serviços de aluguel de geradores pela CONTRATADA para o CONTRATANTE.
-      
-          **DESCRIÇÃO DOS SERVIÇOS**
-      
-          A CONTRATADA compromete-se a disponibilizar os serviços de aluguel de geradores, de acordo com os termos e condições específicos de cada contrato.
-      
-          **NÚMERO DO CONTRATO**
-      
-          O serviço a ser prestado está relacionado ao contrato de Nº {{ contrato.numero }}.
-      
-          **PRAZO E FORMA DE PAGAMENTO**
-      
-          O prazo de prestação dos serviços será estabelecido em cada contrato específico e acordado entre as partes. O pagamento pelos serviços será feito de acordo com as condições previamente acordadas.
-      
-          **DISPOSIÇÕES FINAIS**
-      
-          1. Qualquer alteração ou adendo a este contrato deve ser formalizada por escrito e assinada por ambas as partes.
-      
-          2. Este contrato é regido pelas leis do Brasil, e quaisquer disputas serão submetidas à jurisdição competente.
-      
-          3. As partes declaram ter lido e entendido este contrato e concordam com todos os seus termos e condições.
-      
-          **LOCAL E DATA**
-      
-          Local: [Inserir local de assinatura]
-          Data: [Inserir data de assinatura]
-      
-          **CONTRATANTE**
-      
-          [Assinatura do Contratante]
-          Nome: {{ contrato.cliente.nome }}
-      
-          **CONTRATADA**
-      
-          [Assinatura do Representante Legal da Contratada]
-          Nome: [Inserir nome do representante]
-          Cargo: [Inserir cargo do representante]
-      </p>
-      
-      
+          <p>
+            Pelo presente instrumento particular, as partes têm entre si como 
+            justo e contrato o que se segue:
+          </p>      
+          
+          <p>
+            <strong>
+              Clausula Primeira - Do Objeto:
+            </strong>
+          </p>
+          <p>
+            O presente contrato tem como objetivo, a locação de 1 Grupo Gerador {{equipamento.potencia}} KVA, <strong>{{ tipo }}</strong>, 
+            de propriedade do locador no valor de R$ {{ valor_equipamento }}, 
+            em perfeitas condições de uso a ser instalado no dia {{ data_evento }}, 
+            no(a) {{ local_entrega }}.
+          </p>
+          <p>
+            <strong>
+              Clausula Segunda - Do Recebimento e Condições do Equipamento:
+            </strong>
+          </p>
+          <p>
+            O locatário compromete-se a indicar uma pessoa responsável para receber o gerador 
+            no momento da entrega, que será realizada na sede da empresa ou no local do evento, 
+            em horário a ser ajustado previamente. Durante essa ocasião, o objeto do contrato 
+            será testado, e a pessoa designada pelo locatário certificará-se de que o gerador 
+            se encontra em perfeitas condições de funcionamento. Além disso, compromete-se a 
+            devolvê-lo nas mesmas condições de uso, realizando a entrega no local determinado 
+            na cláusula Primeira do contrato.
+          </p>
+          <p>
+            <strong>
+              Clausula Terceira - Do Período de Locação:
+            </strong>
+          </p>
+          <p>
+            O período de locação será para o dia {{ data_inicio }} até {{ data_termino }}, 
+            no local acima.
+          </p>
+          <p>
+            <strong>
+              Clausula Quarta - Valor do Aluguel, Franquia de Uso e Taxa por Excesso de Horas:
+            </strong>
+          </p>
+          <p>
+            O valor do aluguel acordado para o gerador {{ tipo }} durante o evento, 
+            com a liberdade de uso concedida a partir desta data, é de R$ {{ valor_aluguel }}. 
+            Este valor inclui uma franquia de até <strong>{{ horas_funcionando }} horas de utilização</strong>. 
+            Após o término dessa franquia, será aplicada uma taxa adicional de R$ 150,00 por hora excedente.
+          </p>
+          <p>
+            <strong>
+              Clausula Quinta - Responsabilidades do Locador:
+            </strong>
+          </p>
+          <p>
+            O locador assume a responsabilidade pelos custos relacionados à mobilização e 
+            desmobilização do equipamento locado. Além disso, cabe ao locador a responsabilidade 
+            pelo abastecimento de óleo, levando em consideração a estimativa de consumo de 
+            aproximadamente 25 litros/hora em funcionamento com carga total.
+          </p>
+          <p>
+            <strong>
+              Clausula Sexta - Restrição de Transferência ou Sublocação do Equipamento:
+            </strong>
+          </p>
+          <p>
+            O locatário não está autorizado a ceder, transferir, emprestar ou sublocar 
+            o equipamento objeto deste contrato sem a prévia autorização por escrito do locador. 
+            Qualquer ação que viole essa cláusula resultará em violação contratual e poderá 
+            acarretar em medidas legais cabíveis.
+          </p>
+          <p>
+            <strong>
+              Clausula Sétima - Condições e Método de Pagamento:
+            </strong>
+          </p>
+          <p>
+            O locatário efetuará o pagamento no valor de R$ {{ valor_aluguel }} 
+            {% if tipo_pagamento == "deposito" %}
+                por meio de depósito em conta corrente, <strong>Banco do Brasil, Agência 3396-0, Conta Corrente 9989-9</strong>, 
+                até a data limite de {{ data_evento }}. 
+                Solicita-se encaminhar o comprovante para o endereço de e-mail Celio@seliguegeradores.com.br. 
+            {% elif tipo_pagamento == "pix" %}
+                via PIX, utilizando a chave <strong>CPF 487.063.294-20</strong>, até a data limite de {{ data_evento }}. 
+                Solicita-se encaminhar o comprovante para o endereço de e-mail Celio@seliguegeradores.com.br.
+            {% elif tipo_pagamento == "cartao_credito" or tipo_pagamento == "cartao_debito" %}
+                por meio de cartão de crédito ou débito até a data limite de {{ data_evento }}.
+            {% endif %}
+          </p>
+          <p>
+            <strong>
+              Parágrafo Único:
+            </strong>
+            O pagamento será efetuado mediante apresentação de recibo de quitação da prestação de serviço.
+          </p>
+          <p>
+            <strong>
+              Clausula Oitava - Rescisão Contratual:
+            </strong>
+          </p>
+          <p>
+            Não será permitida a rescisão unilateral do presente contrato por parte do 
+            locador ou locatário durante o período de vigência deste instrumento. 
+            Caso haja infração desta cláusula, a parte prejudicada fica autorizada a buscar 
+            judicialmente e/ou extrajudicialmente o pagamento de uma multa equivalente ao valor 
+            total do serviço contratado.
+          </p>
+          <p>
+            <strong>
+              Clausula Nona - Eleição de Foro:
+            </strong>
+          </p>
+          <p>
+            Para dirimir quaisquer dúvidas ou controvérsias oriundas do presente contrato, 
+            as partes elegem o foro da comarca de João Pessoa/PB como o competente para resolver 
+            quaisquer questões decorrentes deste instrumento. Ambas as partes renunciam 
+            expressamente a qualquer outro foro, por mais privilegiado que seja, em favor da 
+            jurisdição da comarca de João Pessoa/PB.
+          </p>
+          <p>
+            Por estarem de acordo com o exposto, o presente contrato é firmado em 2 (duas) vias, 
+            ambas de igual teor e forma, assinadas pelas partes contratantes, na presença de 2 (duas) 
+            testemunhas.
+          </p> 
+          <p>João Pessoa, {{datacontrato}}</p>
+          
+          <div class="container">
+            <div class="locador">
+                <img src="{% static 'images/assinatura.png' %}" style="width: 100px;"><br>
+                <p style="white-space: nowrap;">Locador: CELIO DI PACE NETO <br> (83) 99981-9608 <br> (83) 98802-1105</p>
+            </div>
+            <div class="locatario">
+                <p>Locatário: {{ cliente.nome }} <br> {{ cliente.numero_documento }}</p>
+            </div>
+          </div>
 
       </main>
 
@@ -85,8 +172,10 @@
       </div>
       
       <footer>
-        SEMOB - BR 230 - Km, 25, Cristo - João Pessoa
-        Fones: 0800.281.1518 / 32189350
+        Confiauto Locações de Equipamento Ltda. <br>
+        Rua Tancredo Neves, nº 220, Ipês, João Pessoa - PB, 58000-000 <br>
+        Fones: (83) 3246-4441 <br>
+        CNPJ: 08.899.308/0001-22
       </footer>
     </body>
 </html>

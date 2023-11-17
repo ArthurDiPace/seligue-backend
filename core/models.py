@@ -132,22 +132,24 @@ class Servico(models.Model):
 
 class Contrato(models.Model):
     numero = models.CharField(max_length=10, unique=True)
-    nome = models.CharField(max_length=80, blank=True, null=True)
-    numero_documento = models.CharField(max_length=14, blank=True, null=True)
+    cliente = models.ForeignKey(Cliente, blank=True, null=True, on_delete=models.CASCADE)
     data_inicio = models.DateTimeField(blank=True, null=True)
     data_termino = models.DateTimeField(blank=True, null=True)
-    equipamento = models.CharField(max_length=50, default="Gerador")
-    potencia_kw = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
-    marca_modelo = models.CharField(max_length=50, blank=True, null=True)
+    equipamento = models.ForeignKey(Equipamento, blank=True, null=True, on_delete=models.CASCADE)
+    tipo = models.CharField(max_length=100, choices=enums.TipoStatus.choices(), blank=True, null=True)
+    horas_funcionando = models.IntegerField(default=0)
     local_entrega = models.CharField(max_length=100, blank=True, null=True)
+    data_evento = models.DateTimeField(blank=True, null=True)
     servicos_inclusos = models.TextField(blank=True, null=True)
     valor_aluguel = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    valor_equipamento = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     deposito_seguranca = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     taxas_adicionais = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     condicoes_especificas = models.TextField(blank=True, null=True)
     estado_inicial_gerador = models.TextField(blank=True, null=True)
     pago = models.BooleanField(default=False)
-    documentos = models.FileField(upload_to='documentos_contrato/', blank=True, null=True)
+    tipo_pagamento = models.CharField(max_length=30, choices=enums.TipoPagamento.choices(), null=True, blank=True)
+    data_pagamento = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         return self.numero
