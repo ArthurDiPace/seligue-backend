@@ -4,6 +4,7 @@ from xml.etree.ElementInclude import default_loader
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
+from django.utils import timezone
 from django.db import models
 
 from common import enums
@@ -85,18 +86,27 @@ class Equipamento(models.Model):
 
 class Funcionario(models.Model):
     nome = models.CharField(max_length=80)
+    numero_documento = models.CharField(max_length=18, null=True, blank=True)
     cargo = models.CharField(max_length=80)
     salario = models.DecimalField(max_digits=10, decimal_places=2)
     data_admissao = models.DateField()
     data_nascimento = models.DateField()
-    endereco = models.CharField(max_length=120)
+    cep = models.CharField(max_length=8, null=True, blank=True)
+    endereco = models.CharField(max_length=120, null=True, blank=True)
+    numero = models.CharField(max_length=10, null=True, blank=True)
+    complemento = models.CharField(max_length=50, null=True, blank=True)
+    bairro = models.CharField(max_length=80, null=True, blank=True)
+    municipio = models.CharField(max_length=80, null=True, blank=True)
+    uf = models.CharField(max_length=2, null=True, blank=True)
     telefone = models.CharField(max_length=20)
     foto = models.ImageField(upload_to="funcionarios_fotos", null=True, blank=True)
     excluido = models.BooleanField(default=False)
     data_cadastro = models.DateField(auto_now_add=True)
+    data_desligado = models.DateField(null=True, blank=True)
 
     def delete(self):
         self.excluido = True
+        self.data_desligado = timezone.now().date()
         self.save()
 
     def __str__(self):
@@ -124,7 +134,7 @@ class Servico(models.Model):
     funcionario =  models.ForeignKey(Funcionario, blank=True, null=True, on_delete=models.CASCADE)
     preco = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     parecer = models.CharField(max_length=30, choices=enums.ServicoStatus.choices(), null=True, blank=True)
-   
+    
     def __str__(self):
         return f"Serviço para {self.equipamento or self.veiculo} em {self.data}"
     

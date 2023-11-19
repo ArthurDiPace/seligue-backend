@@ -52,16 +52,14 @@ class ClienteViewSet(LoggingMixin, viewsets.ModelViewSet):
         queryset = queryset.order_by('nome', 'numero_documento')
         return queryset
 
+
 class EquipamentoViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = Equipamento.objects.filter(excluido=False)
     serializer_class = EquipamentoSerializer
     permission_classes = [DjangoModelPermissions]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["id", "categoria"]
-    
-    
-    
-    
+
 
 class VeiculoViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = Veiculo.objects.filter(excluido=False)
@@ -72,13 +70,25 @@ class VeiculoViewSet(LoggingMixin, viewsets.ModelViewSet):
 
     
 class FuncionarioViewSet(LoggingMixin, viewsets.ModelViewSet):
-    queryset = Funcionario.objects.all()
     serializer_class = FuncionarioSerializer
     permission_classes = [DjangoModelPermissions]
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["nome"]
-    ordering_fields = ["nome"]
-    ordering = ["nome"]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = {'nome': ['icontains'], 'numero_documento': ['icontains']}
+    search_fields = ['nome__icontains', 'numero_documento__icontains']
+
+    def get_queryset(self):
+        queryset = Funcionario.objects.filter(excluido=False)  
+        nome = self.request.query_params.get('nome')
+        numero_documento = self.request.query_params.get('numero_documento')
+        
+        if nome is not None:
+            queryset = queryset.filter(excluido=False, nome__icontains=nome)
+        
+        if numero_documento is not None :
+            queryset = queryset.filter(excluido=False, numero_documento__icontains=numero_documento)
+            
+        queryset = queryset.order_by('nome', 'numero_documento')
+        return queryset
 
 
 class ItemServicoViewSet(LoggingMixin, viewsets.ModelViewSet):
@@ -102,29 +112,34 @@ class ServicoViewSet(LoggingMixin, viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         tipo = request.data.get('categoria', None)
-        id = request.data.get('id', None)
         
         if tipo == 'veiculo':
             model_class = Veiculo
+            id = request.data.get('veiculo', None)
+           
         elif tipo == 'equipamento':
             model_class = Equipamento
+            id = request.data.get('equipamento', None)
+           
         else:
             return Response({"error": "Tipo inválido"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             obj = model_class.objects.get(id=id)
+            
         except model_class.DoesNotExist:
             return Response({"error": f"{model_class.__name__} com ID {id} não encontrado"},
                             status=status.HTTP_404_NOT_FOUND)
 
 
-        servico = Servico.objects.create(
-            content_type=ContentType.objects.get_for_model(obj),
-            object_id=obj.id,
+        Servico.objects.create(
+            veiculo=obj if isinstance(obj, Veiculo) and tipo == 'veiculo' else None,
+            equipamento=obj if isinstance(obj, Equipamento) and tipo == 'equipamento' else None,
         )
 
         return Response({"success": "Serviço criado com sucesso"}, status=status.HTTP_201_CREATED)
-    
+
+
 class UserViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -139,7 +154,6 @@ class ContratoViewSet(LoggingMixin, viewsets.ModelViewSet):
     ordering_fields = ["cliente"]
     ordering = ["cliente"]
 
-
     def create(self, request, *args, **kwargs):
         if request.data:
             return self.documentos(request)
@@ -152,7 +166,6 @@ class ContratoViewSet(LoggingMixin, viewsets.ModelViewSet):
         data_formatada = data.strftime("%d/%m/%Y")
         context = request.data
         
-
         return render_pdf(
             template_path=f"documentos/contrato.html",
             base_url=request.build_absolute_uri(),

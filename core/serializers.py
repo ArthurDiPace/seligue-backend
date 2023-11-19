@@ -74,7 +74,8 @@ class ServicoSerializer(FlexFieldsModelSerializer):
         fields = "__all__"
 
         expandable_fields = {
-            "veiculo": EquipamentoSerializer,
+            "veiculo": VeiculoSerializer,
+            "equipamento": EquipamentoSerializer,
             "usuario": UserSerializer,
         }
 

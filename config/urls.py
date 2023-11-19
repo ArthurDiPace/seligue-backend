@@ -26,7 +26,7 @@ from core import views
 
 router = routers.DefaultRouter()
 router.register(r"cliente", views.ClienteViewSet, basename='cliente')
-router.register(r"funcionario", views.FuncionarioViewSet)
+router.register(r"funcionario", views.FuncionarioViewSet,  basename='funcionario')
 router.register(r"equipamento", views.EquipamentoViewSet)
 router.register(r"veiculo", views.VeiculoViewSet)
 router.register(r"contrato", views.ContratoViewSet)
