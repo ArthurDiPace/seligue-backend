@@ -57,16 +57,31 @@ class EquipamentoViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = Equipamento.objects.filter(excluido=False)
     serializer_class = EquipamentoSerializer
     permission_classes = [DjangoModelPermissions]
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend,  filters.OrderingFilter]
     filterset_fields = ["id", "categoria"]
+    ordering = ["id"]
 
 
 class VeiculoViewSet(LoggingMixin, viewsets.ModelViewSet):
-    queryset = Veiculo.objects.filter(excluido=False)
     serializer_class = VeiculoSerializer
     permission_classes = [DjangoModelPermissions]
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["id", "categoria"]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = {'marca_modelo': ['icontains'], 'id': ['icontains']}
+    search_fields = ['marca_modelo__icontains', 'id__icontains']
+
+    def get_queryset(self):
+        queryset = Veiculo.objects.filter(excluido=False)  
+        marca_modelo = self.request.query_params.get('marca_modelo')
+        id = self.request.query_params.get('id')
+        
+        if marca_modelo is not None:
+            queryset = queryset.filter(excluido=False, marca_modelo__icontains=marca_modelo)
+       
+        if id is not None:
+            queryset = queryset.filter(excluido=False, id__icontains=id)
+            
+        queryset = queryset.order_by('marca_modelo', 'id')
+        return queryset
 
     
 class FuncionarioViewSet(LoggingMixin, viewsets.ModelViewSet):
@@ -96,6 +111,7 @@ class ItemServicoViewSet(LoggingMixin, viewsets.ModelViewSet):
     serializer_class = ItemServicoSerializer
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     permission_classes = [DjangoModelPermissions]
+    ordering = ["id"]
 
 
 class ServicoViewSet(LoggingMixin, viewsets.ModelViewSet):
@@ -103,41 +119,8 @@ class ServicoViewSet(LoggingMixin, viewsets.ModelViewSet):
     serializer_class = ServicoSerializer
     permission_classes = [DjangoModelPermissions]
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
-    ordering_fields = [
-        "veiculo__categoria",
-        "equipamento__categoria",
-        "parecer",
-    ]
-    ordering = ["veiculo__categoria", "equipamento__categoria", "parecer"]
-
-    def create(self, request, *args, **kwargs):
-        tipo = request.data.get('categoria', None)
-        
-        if tipo == 'veiculo':
-            model_class = Veiculo
-            id = request.data.get('veiculo', None)
-           
-        elif tipo == 'equipamento':
-            model_class = Equipamento
-            id = request.data.get('equipamento', None)
-           
-        else:
-            return Response({"error": "Tipo inválido"}, status=status.HTTP_400_BAD_REQUEST)
-
-        try:
-            obj = model_class.objects.get(id=id)
-            
-        except model_class.DoesNotExist:
-            return Response({"error": f"{model_class.__name__} com ID {id} não encontrado"},
-                            status=status.HTTP_404_NOT_FOUND)
-
-
-        Servico.objects.create(
-            veiculo=obj if isinstance(obj, Veiculo) and tipo == 'veiculo' else None,
-            equipamento=obj if isinstance(obj, Equipamento) and tipo == 'equipamento' else None,
-        )
-
-        return Response({"success": "Serviço criado com sucesso"}, status=status.HTTP_201_CREATED)
+    filterset_fields = ["veiculo__categoria"]
+    ordering = ["id"]
 
 
 class UserViewSet(LoggingMixin, viewsets.ModelViewSet):
@@ -154,7 +137,7 @@ class ContratoViewSet(LoggingMixin, viewsets.ModelViewSet):
     ordering_fields = ["cliente"]
     ordering = ["cliente"]
 
-    def create(self, request, *args, **kwargs):
+    def create_contrato(self, request, *args, **kwargs):
         if request.data:
             return self.documentos(request)
     
