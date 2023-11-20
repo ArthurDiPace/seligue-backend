@@ -1,7 +1,4 @@
-import os
-from datetime import date
-
-from django.core import serializers as DjangoSerializers
+from django.core import serializers
 from rest_flex_fields import FlexFieldsModelSerializer
 from rest_framework import serializers
 

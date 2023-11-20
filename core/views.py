@@ -1,28 +1,15 @@
-import calendar
-import json
 import logging
-import re
-from datetime import date, datetime, timedelta
 
-import psycopg2
-import psycopg2.extras
-import requests
-from decouple import config
-from django.conf import settings
-from django.db.models import Count, Max
-from django.shortcuts import redirect
-from django.utils import timezone
+from datetime import datetime
 from django_filters.rest_framework import DjangoFilterBackend
-from django.contrib.contenttypes.models import ContentType
-from rest_framework import filters, status, viewsets
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.response import Response
+from rest_framework import filters,  viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import DjangoModelPermissions
-from rest_framework.response import Response
 from rest_framework_tracking.mixins import LoggingMixin
-from unidecode import unidecode
-from zeep import Client
 
-from common.utils import generate_qr_code, render_pdf
+from common.utils import render_pdf
 from core.models import *
 from core.serializers import *
 
@@ -90,6 +77,7 @@ class FuncionarioViewSet(LoggingMixin, viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = {'nome': ['icontains'], 'numero_documento': ['icontains']}
     search_fields = ['nome__icontains', 'numero_documento__icontains']
+    parser_classes = [MultiPartParser, FormParser]
 
     def get_queryset(self):
         queryset = Funcionario.objects.filter(excluido=False)  
@@ -105,6 +93,26 @@ class FuncionarioViewSet(LoggingMixin, viewsets.ModelViewSet):
         queryset = queryset.order_by('nome', 'numero_documento')
         return queryset
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers, content_type='application/json')
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data, content_type='application/json')
+
+    def perform_update(self, serializer):
+        serializer.save()
+
+    def perform_create(self, serializer):
+        serializer.save()
 
 class ItemServicoViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = ItemServico.objects.all()
