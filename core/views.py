@@ -145,7 +145,7 @@ class ContratoViewSet(LoggingMixin, viewsets.ModelViewSet):
     ordering_fields = ["cliente"]
     ordering = ["cliente"]
 
-    def create_contrato(self, request, *args, **kwargs):
+    def create(self, request, *args, **kwargs):
         if request.data:
             return self.documentos(request)
     
