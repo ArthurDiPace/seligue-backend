@@ -1,4 +1,7 @@
 import logging
+import base64
+from io import BytesIO
+import qrcode
 
 from datetime import datetime
 from django_filters.rest_framework import DjangoFilterBackend
@@ -9,7 +12,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import DjangoModelPermissions
 from rest_framework_tracking.mixins import LoggingMixin
 
-from common.utils import render_pdf
+from common.utils import generate_qr_code, render_pdf
 from core.models import *
 from core.serializers import *
 
@@ -48,6 +51,14 @@ class EquipamentoViewSet(LoggingMixin, viewsets.ModelViewSet):
     filterset_fields = ["id", "categoria"]
     ordering = ["id"]
 
+    def perform_create(self, serializer):
+        instance = serializer.save()
+        url = f""  # Substitua com a URL correta do serviço de equipamento
+
+        qr_code = generate_qr_code(url)
+
+        instance.qr_code = qr_code
+        instance.save()
 
 class VeiculoViewSet(LoggingMixin, viewsets.ModelViewSet):
     serializer_class = VeiculoSerializer
@@ -69,6 +80,17 @@ class VeiculoViewSet(LoggingMixin, viewsets.ModelViewSet):
             
         queryset = queryset.order_by('marca_modelo', 'id')
         return queryset
+    
+    def perform_create(self, serializer):
+        instance = serializer.save()
+        url = f""  # Substitua com a URL correta do serviço de veículo
+
+        # Gerar o QR code
+        qr_code = generate_qr_code(url)
+
+        # Salvar o QR code no objeto Veiculo recém-criado
+        instance.qr_code = qr_code
+        instance.save()
 
     
 class FuncionarioViewSet(LoggingMixin, viewsets.ModelViewSet):
@@ -114,6 +136,7 @@ class FuncionarioViewSet(LoggingMixin, viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save()
 
+
 class ItemServicoViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = ItemServico.objects.all()
     serializer_class = ItemServicoSerializer
@@ -127,8 +150,8 @@ class ServicoViewSet(LoggingMixin, viewsets.ModelViewSet):
     serializer_class = ServicoSerializer
     permission_classes = [DjangoModelPermissions]
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
-    filterset_fields = ["veiculo__categoria"]
-    ordering = ["id"]
+    filterset_fields = ["veiculo__categoria", "equipamento"]
+    ordering = ["equipamento"]    
 
 
 class UserViewSet(LoggingMixin, viewsets.ModelViewSet):
@@ -162,3 +185,5 @@ class ContratoViewSet(LoggingMixin, viewsets.ModelViewSet):
             base_url=request.build_absolute_uri(),
             context=context,
             )
+
+

@@ -54,6 +54,7 @@ class Veiculo(models.Model):
     data_cadastro = models.DateField(auto_now_add=True)
     status = models.CharField(max_length=12, choices=enums.EquipamentoStatus.choices())
     observacao = models.TextField(max_length=300, blank=True, null=True)
+    qr_code = models.TextField(blank=True, null=True)
     
     def delete(self):
         self.excluido = True
@@ -78,6 +79,7 @@ class Equipamento(models.Model):
     data_cadastro = models.DateField(auto_now_add=True)
     status = models.CharField(max_length=12, choices=enums.EquipamentoStatus.choices())
     observacao = models.TextField(max_length=300, blank=True, null=True)
+    qr_code = models.TextField(blank=True, null=True)
 
     def delete(self):
         self.excluido = True
@@ -113,12 +115,6 @@ class Funcionario(models.Model):
         return self.nome
 
 
-class Log(models.Model):
-    data = models.DateTimeField(auto_now_add=True)
-    descricao = models.TextField()
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
-
-
 class ItemServico(models.Model):
     descricao = models.CharField(max_length=255)
 
@@ -134,12 +130,11 @@ class Servico(models.Model):
     funcionario =  models.ForeignKey(Funcionario, blank=True, null=True, on_delete=models.CASCADE)
     preco = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     parecer = models.CharField(max_length=30, choices=enums.ServicoStatus.choices(), null=True, blank=True)
+    servico_cliente = models.BooleanField(default=False)
+    horimetro = models.CharField(max_length=20, null=True, blank=True)
+    odometro = models.CharField(max_length=20, null=True, blank=True)
     
-    def __str__(self):
-        return f"Serviço para {self.equipamento or self.veiculo} em {self.data}"
     
-    
-
 class Contrato(models.Model):
     numero = models.CharField(max_length=10, unique=True)
     cliente = models.ForeignKey(Cliente, blank=True, null=True, on_delete=models.CASCADE)
