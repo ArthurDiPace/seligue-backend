@@ -1,7 +1,4 @@
 import logging
-import base64
-from io import BytesIO
-import qrcode
 
 from datetime import datetime
 from django_filters.rest_framework import DjangoFilterBackend
@@ -53,10 +50,7 @@ class EquipamentoViewSet(LoggingMixin, viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         instance = serializer.save()
-        url = f""  # Substitua com a URL correta do serviço de equipamento
-
-        qr_code = generate_qr_code(url)
-
+        qr_code = generate_qr_code(instance.id)
         instance.qr_code = qr_code
         instance.save()
 
@@ -83,14 +77,10 @@ class VeiculoViewSet(LoggingMixin, viewsets.ModelViewSet):
     
     def perform_create(self, serializer):
         instance = serializer.save()
-        url = f""  # Substitua com a URL correta do serviço de veículo
-
-        # Gerar o QR code
-        qr_code = generate_qr_code(url)
-
-        # Salvar o QR code no objeto Veiculo recém-criado
+        qr_code = generate_qr_code(instance.id)
         instance.qr_code = qr_code
         instance.save()
+
 
     
 class FuncionarioViewSet(LoggingMixin, viewsets.ModelViewSet):

@@ -20,10 +20,10 @@ def render_pdf(template_path, base_url, context):
         return Response({"detail": str(e)}, status=500)
 
 
-def generate_qr_code(url):
+def generate_qr_code(data):
     try:
         qr = BytesIO()
-        img = qrcode.make(url)
+        img = qrcode.make(data)
         img.save(qr)
         image_stream = qr.getvalue()
         qr_b64 = base64.b64encode(image_stream)
